@@ -23,6 +23,7 @@ import Card from './components/Card'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import Hero from './components/Hero'
+import HomeDiscover from './components/HomeDiscover'
 import PostHero from './components/PostHero'
 import RightFloatArea from './components/RightFloatArea'
 import SearchNav from './components/SearchNav'
@@ -98,7 +99,8 @@ const LayoutBase = props => {
     <ThemeGlobalHexo.Provider value={{ searchModal }}>
       <div
         id='theme-hexo'
-        className={`${siteConfig('FONT_STYLE')} dark:bg-black scroll-smooth`}>
+        className={`${siteConfig('FONT_STYLE')} dark:bg-black scroll-smooth`}
+      >
         <Style />
 
         {/* 顶部导航 */}
@@ -114,14 +116,16 @@ const LayoutBase = props => {
           leave='transition ease-in-out duration-300 transform'
           leaveFrom='opacity-100'
           leaveTo='opacity-0 translate-y-16'
-          unmount={false}>
+          unmount={false}
+        >
           {headerSlot}
         </Transition>
 
         {/* 主区块 */}
         <main
           id='wrapper'
-          className={`${siteConfig('HEXO_HOME_BANNER_ENABLE', null, CONFIG) ? 'pt-0' : 'pt-16'} bg-hexo-background-gray dark:bg-black w-full md:px-8 lg:px-24 min-h-screen relative`}>
+          className={`${siteConfig('HEXO_HOME_BANNER_ENABLE', null, CONFIG) ? 'pt-0' : 'pt-16'} bg-hexo-background-gray dark:bg-black w-full md:px-8 lg:px-24 min-h-screen relative`}
+        >
           <div
             id='container-inner'
             className={
@@ -129,9 +133,11 @@ const LayoutBase = props => {
                 ? 'flex-row-reverse'
                 : '') +
               ' w-full mx-auto lg:flex lg:space-x-4 justify-center relative z-10'
-            }>
+            }
+          >
             <div
-              className={`${className || ''} w-full ${fullWidth ? '' : 'max-w-4xl'} h-full overflow-hidden`}>
+              className={`${className || ''} w-full ${fullWidth ? '' : 'max-w-4xl'} h-full overflow-hidden`}
+            >
               {showArticleSwitchPlaceholder ? (
                 <ArticleSwitchPlaceholder />
               ) : (
@@ -144,7 +150,8 @@ const LayoutBase = props => {
                   leave='transition ease-in-out duration-300 transform'
                   leaveFrom='opacity-100 translate-y-0'
                   leaveTo='opacity-0 -translate-y-16'
-                  unmount={false}>
+                  unmount={false}
+                >
                   {/* 主区上部嵌入 */}
                   {slotTop}
 
@@ -182,7 +189,41 @@ const LayoutBase = props => {
  * @returns
  */
 const LayoutIndex = props => {
-  return <LayoutPostList {...props} className='pt-8' />
+  return (
+    <div className='pt-8'>
+      <HomeDiscover {...props} />
+      <section
+        id='home-content'
+        aria-labelledby='home-latest-title'
+        className='scroll-mt-20'
+      >
+        <div className='mb-6 flex flex-wrap items-end justify-between gap-3 px-3'>
+          <div>
+            <p className='mb-1 text-xs font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-300'>
+              ALL STORIES
+            </p>
+            <h2
+              id='home-latest-title'
+              className='text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl'
+            >
+              文章随笔
+            </h2>
+          </div>
+          <SmartLink
+            href='/archive'
+            className='text-sm font-medium text-indigo-700 hover:underline dark:text-indigo-300'
+          >
+            查看全部文章 →
+          </SmartLink>
+        </div>
+        {siteConfig('POST_LIST_STYLE') === 'page' ? (
+          <BlogPostListPage {...props} />
+        ) : (
+          <BlogPostListScroll {...props} />
+        )}
+      </section>
+    </div>
+  )
 }
 
 /**
@@ -280,19 +321,18 @@ const LayoutSlug = props => {
   useEffect(() => {
     // 404
     if (!post) {
-      setTimeout(
-        () => {
-          if (isBrowser) {
-            const article = document.querySelector('#article-wrapper #notion-article')
-            if (!article) {
-              router.push('/404').then(() => {
-                console.warn('找不到页面', router.asPath)
-              })
-            }
+      setTimeout(() => {
+        if (isBrowser) {
+          const article = document.querySelector(
+            '#article-wrapper #notion-article'
+          )
+          if (!article) {
+            router.push('/404').then(() => {
+              console.warn('找不到页面', router.asPath)
+            })
           }
-        },
-        waiting404
-      )
+        }
+      }, waiting404)
     }
   }, [post])
   return (
@@ -304,7 +344,8 @@ const LayoutSlug = props => {
           <div className='overflow-x-auto flex-grow mx-auto md:w-full md:px-5 '>
             <article
               id='article-wrapper'
-              className='subpixel-antialiased overflow-y-hidden'>
+              className='subpixel-antialiased overflow-y-hidden'
+            >
               {/* Notion文章主体 */}
               <section className='px-5 justify-center mx-auto max-w-2xl lg:max-w-full'>
                 {post && <NotionPage post={post} />}
@@ -346,7 +387,9 @@ const Layout404 = props => {
     // 延时3秒如果加载失败就返回首页
     setTimeout(() => {
       if (isBrowser) {
-        const article = document.querySelector('#article-wrapper #notion-article')
+        const article = document.querySelector(
+          '#article-wrapper #notion-article'
+        )
         if (!article) {
           router.push('/').then(() => {
             // console.log('找不到页面', router.asPath)
@@ -392,11 +435,13 @@ const LayoutCategoryIndex = props => {
                 key={category.name}
                 href={`/category/${category.name}`}
                 passHref
-                legacyBehavior>
+                legacyBehavior
+              >
                 <div
                   className={
                     ' duration-300 dark:hover:text-white px-5 cursor-pointer py-2 hover:text-indigo-400'
-                  }>
+                  }
+                >
                   <i className='mr-4 fas fa-folder' /> {category.name}(
                   {category.count})
                 </div>

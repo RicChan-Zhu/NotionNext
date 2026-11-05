@@ -18,7 +18,7 @@ const BLOG = {
 
   AUTHOR: process.env.NEXT_PUBLIC_AUTHOR || 'KomoZ', // 您的昵称 例如 tangly1024
   BIO: process.env.NEXT_PUBLIC_BIO || '喜欢折腾，喜欢创新，喜欢旅游，去过法、意、瑞、泰、越、俄、白俄、土耳其', // 作者简介
-  LINK: process.env.NEXT_PUBLIC_LINK || 'https://komoz.qd.je', // 网站地址
+  LINK: process.env.NEXT_PUBLIC_LINK || 'https://www.komoz.bid', // 网站地址
   KEYWORDS: process.env.NEXT_PUBLIC_KEYWORD || '科技，生活，日常分享', // 网站关键词 英文逗号隔开
   BLOG_FAVICON: process.env.NEXT_PUBLIC_FAVICON || '/favicon.ico', // blog favicon 配置, 默认使用 /public/favicon.ico，支持在线图片，如 https://img.imesong.com/favicon.png
   PWA_ENABLE: process.env.NEXT_PUBLIC_PWA_ENABLE || false, // 是否启用 PWA 安装入口；也可在 Notion_Config 中配置 PWA_ENABLE=true

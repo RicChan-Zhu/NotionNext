@@ -21,8 +21,16 @@ const Style = () => {
   const titleDark = siteConfig('HEXO_COLOR_TITLE_DARK', '#f3f4f6', CONFIG)
   const text = siteConfig('HEXO_COLOR_TEXT', '#374151', CONFIG)
   const textDark = siteConfig('HEXO_COLOR_TEXT_DARK', '#d1d5db', CONFIG)
-  const textSecondary = siteConfig('HEXO_COLOR_TEXT_SECONDARY', '#9ca3af', CONFIG)
-  const textSecondaryDark = siteConfig('HEXO_COLOR_TEXT_SECONDARY_DARK', '#6b7280', CONFIG)
+  const textSecondary = siteConfig(
+    'HEXO_COLOR_TEXT_SECONDARY',
+    '#9ca3af',
+    CONFIG
+  )
+  const textSecondaryDark = siteConfig(
+    'HEXO_COLOR_TEXT_SECONDARY_DARK',
+    '#6b7280',
+    CONFIG
+  )
   const border = siteConfig('HEXO_COLOR_BORDER', '#e5e7eb', CONFIG)
   const borderDark = siteConfig('HEXO_COLOR_BORDER_DARK', '#000000', CONFIG)
 
@@ -67,7 +75,7 @@ const Style = () => {
         background-color: var(--hexo-color-bg);
       }
 
-      #theme-hexo #blog-post-card,
+      #theme-hexo .blog-post-card,
       #theme-hexo .card,
       #theme-hexo #announcement-wrapper,
       #theme-hexo .article {
@@ -75,16 +83,16 @@ const Style = () => {
         border-color: var(--hexo-color-border);
       }
 
-      #theme-hexo #blog-post-card h2 .menu-link {
+      #theme-hexo .blog-post-card h2 .menu-link {
         color: var(--hexo-color-title);
       }
 
-      #theme-hexo #blog-post-card main,
-      #theme-hexo #blog-post-card p {
+      #theme-hexo .blog-post-card main,
+      #theme-hexo .blog-post-card p {
         color: var(--hexo-color-text);
       }
 
-      #theme-hexo #blog-post-card .text-gray-400 {
+      #theme-hexo .blog-post-card .text-gray-400 {
         color: var(--hexo-color-text-secondary);
       }
 
@@ -304,7 +312,7 @@ const Style = () => {
       #theme-hexo #home-nav-button a:hover {
         color: #000 !important;
       }
-  `}</style>
+    `}</style>
   )
 }
 

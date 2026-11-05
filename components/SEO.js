@@ -66,7 +66,11 @@ const SEO = props => {
   }
   const TITLE = siteConfig('TITLE')
   const title = meta?.title || TITLE
-  const description = meta?.description || `${siteInfo?.description}`
+  const description =
+    meta?.description ||
+    siteConfig('DESCRIPTION') ||
+    siteInfo?.description ||
+    ''
   const type = meta?.type === 'Post' ? 'article' : meta?.type || 'website'
   const ENABLE_RSS = siteConfig('ENABLE_RSS')
   // 订阅文件的绝对地址，与 lib/utils/rss.js 的静态输出路径保持一致
@@ -77,8 +81,7 @@ const SEO = props => {
     rssSubPath ? `${LINK}/${rssSubPath}` : LINK,
     'rss/feed.xml'
   )
-  const language =
-    router?.locale || siteConfig('LANG', 'zh-CN', NOTION_CONFIG)
+  const language = router?.locale || siteConfig('LANG', 'zh-CN', NOTION_CONFIG)
   const lang = String(language).replace('-', '_') // Facebook OpenGraph 要 zh_CN 這樣的格式才抓得到語言
   const category = Array.isArray(meta?.category)
     ? meta?.category?.[0]
@@ -143,7 +146,10 @@ const SEO = props => {
         name='viewport'
         content='width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0'
       />
-      <meta name='robots' content='follow, index, max-snippet:-1, max-image-preview:large, max-video-preview:-1' />
+      <meta
+        name='robots'
+        content='follow, index, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
+      />
       <meta charSet='UTF-8' />
       <meta name='format-detection' content='telephone=no' />
       <meta name='mobile-web-app-capable' content='yes' />
@@ -240,7 +246,10 @@ const SEO = props => {
       {meta?.type === 'Post' && (
         <>
           {meta.publishTime && (
-            <meta property='article:published_time' content={meta.publishTime} />
+            <meta
+              property='article:published_time'
+              content={meta.publishTime}
+            />
           )}
           {meta.modifiedTime && (
             <meta
@@ -262,7 +271,18 @@ const SEO = props => {
         type='application/ld+json'
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
-            generateStructuredData(meta, siteInfo, url, image, AUTHOR, LINK)
+            generateStructuredData(
+              meta,
+              {
+                ...siteInfo,
+                title: siteConfig('TITLE') || siteInfo?.title,
+                description: siteConfig('DESCRIPTION') || siteInfo?.description
+              },
+              url,
+              image,
+              AUTHOR,
+              LINK
+            )
           )
         }}
       />
@@ -400,44 +420,45 @@ const getSEOMeta = (props, router, locale) => {
   const { post, siteInfo, tag, category, page } = props
   const keyword = router?.query?.s
 
-  const TITLE = siteConfig('TITLE')
+  const TITLE = siteConfig('TITLE') || siteInfo?.title || 'Blog'
+  const DESCRIPTION = siteConfig('DESCRIPTION') || siteInfo?.description || ''
   switch (router.route) {
     case '/':
       return {
-        title: `${siteInfo?.title} | ${siteInfo?.description}`,
-        description: `${siteInfo?.description}`,
+        title: `${TITLE} | ${DESCRIPTION}`,
+        description: `${DESCRIPTION}`,
         image: `${siteInfo?.pageCover}`,
         slug: '',
         type: 'website'
       }
     case '/archive':
       return {
-        title: `${locale.NAV.ARCHIVE} | ${siteInfo?.title}`,
-        description: `${siteInfo?.description}`,
+        title: `${locale.NAV.ARCHIVE} | ${TITLE}`,
+        description: `${DESCRIPTION}`,
         image: `${siteInfo?.pageCover}`,
         slug: 'archive',
         type: 'website'
       }
     case '/page/[page]':
       return {
-        title: `${page} | Page | ${siteInfo?.title}`,
-        description: `${siteInfo?.description}`,
+        title: `${page} | Page | ${TITLE}`,
+        description: `${DESCRIPTION}`,
         image: `${siteInfo?.pageCover}`,
         slug: 'page/' + page,
         type: 'website'
       }
     case '/category/[category]':
       return {
-        title: `${category} | ${locale.COMMON.CATEGORY} | ${siteInfo?.title}`,
-        description: `${siteInfo?.description}`,
+        title: `${category} | ${locale.COMMON.CATEGORY} | ${TITLE}`,
+        description: `${DESCRIPTION}`,
         slug: 'category/' + category,
         image: `${siteInfo?.pageCover}`,
         type: 'website'
       }
     case '/category/[category]/page/[page]':
       return {
-        title: `${category} | ${locale.COMMON.CATEGORY} | ${siteInfo?.title}`,
-        description: `${siteInfo?.description}`,
+        title: `${category} | ${locale.COMMON.CATEGORY} | ${TITLE}`,
+        description: `${DESCRIPTION}`,
         slug: 'category/' + category,
         image: `${siteInfo?.pageCover}`,
         type: 'website'
@@ -445,16 +466,16 @@ const getSEOMeta = (props, router, locale) => {
     case '/tag/[tag]':
     case '/tag/[tag]/page/[page]':
       return {
-        title: `${tag} | ${locale.COMMON.TAGS} | ${siteInfo?.title}`,
-        description: `${siteInfo?.description}`,
+        title: `${tag} | ${locale.COMMON.TAGS} | ${TITLE}`,
+        description: `${DESCRIPTION}`,
         image: `${siteInfo?.pageCover}`,
         slug: 'tag/' + tag,
         type: 'website'
       }
     case '/search':
       return {
-        title: `${keyword || ''}${keyword ? ' | ' : ''}${locale.NAV.SEARCH} | ${siteInfo?.title}`,
-        description: `${siteInfo?.description}`,
+        title: `${keyword || ''}${keyword ? ' | ' : ''}${locale.NAV.SEARCH} | ${TITLE}`,
+        description: `${DESCRIPTION}`,
         image: `${siteInfo?.pageCover}`,
         slug: 'search',
         type: 'website'
@@ -462,7 +483,7 @@ const getSEOMeta = (props, router, locale) => {
     case '/search/[keyword]':
     case '/search/[keyword]/page/[page]':
       return {
-        title: `${keyword || ''}${keyword ? ' | ' : ''}${locale.NAV.SEARCH} | ${siteInfo?.title}`,
+        title: `${keyword || ''}${keyword ? ' | ' : ''}${locale.NAV.SEARCH} | ${TITLE}`,
         description: TITLE,
         image: `${siteInfo?.pageCover}`,
         slug: 'search/' + (keyword || ''),
@@ -470,21 +491,21 @@ const getSEOMeta = (props, router, locale) => {
       }
     case '/404':
       return {
-        title: `${siteInfo?.title} | ${locale.NAV.PAGE_NOT_FOUND}`,
+        title: `${TITLE} | ${locale.NAV.PAGE_NOT_FOUND}`,
         image: `${siteInfo?.pageCover}`
       }
     case '/tag':
       return {
-        title: `${locale.COMMON.TAGS} | ${siteInfo?.title}`,
-        description: `${siteInfo?.description}`,
+        title: `${locale.COMMON.TAGS} | ${TITLE}`,
+        description: `${DESCRIPTION}`,
         image: `${siteInfo?.pageCover}`,
         slug: 'tag',
         type: 'website'
       }
     case '/category':
       return {
-        title: `${locale.COMMON.CATEGORY} | ${siteInfo?.title}`,
-        description: `${siteInfo?.description}`,
+        title: `${locale.COMMON.CATEGORY} | ${TITLE}`,
+        description: `${DESCRIPTION}`,
         image: `${siteInfo?.pageCover}`,
         slug: 'category',
         type: 'website'
@@ -494,9 +515,7 @@ const getSEOMeta = (props, router, locale) => {
         ? post?.category?.[0]
         : post?.category
       return {
-        title: post
-          ? `${post?.title} | ${siteInfo?.title}`
-          : `${siteInfo?.title} | loading`,
+        title: post ? `${post?.title} | ${TITLE}` : `${TITLE} | loading`,
         description: post?.summary,
         type: post?.type,
         slug: post?.slug,
@@ -506,8 +525,7 @@ const getSEOMeta = (props, router, locale) => {
         publishDay: post?.publishDay,
         lastEditedDay: post?.lastEditedDay,
         publishTime:
-          getIsoTime(post?.publishDate) ||
-          getIsoTime(post?.date?.start_date),
+          getIsoTime(post?.publishDate) || getIsoTime(post?.date?.start_date),
         modifiedTime: getIsoTime(post?.lastEditedTime || post?.lastEditedDate)
       }
   }
